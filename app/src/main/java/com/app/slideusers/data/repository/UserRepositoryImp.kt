@@ -1,4 +1,21 @@
 package com.app.slideusers.data.repository
 
-class UserRepositoryImp {
+import com.app.slideusers.data.remote.dto.userlist.Data
+import com.app.slideusers.data.remote.dto.userlist.UserList
+import com.app.slideusers.data.remote.network.ApiService
+import com.app.slideusers.domain.repository.UserListRepository
+import javax.inject.Inject
+
+class UserRepositoryImp @Inject constructor(private val apiService: ApiService) : UserListRepository {
+    override suspend fun getUserList(): List<Data> {
+        return apiService.getUserList().data
+    }
+
+    override suspend fun addNewUser(inputBody: HashMap<String, String>): String {
+        return apiService.addNewUser(inputBody)
+    }
+
+    override suspend fun deleteUser(userId:String): String {
+        return apiService.deleteUser(userId)
+    }
 }
