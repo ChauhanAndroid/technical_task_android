@@ -5,7 +5,7 @@ import com.app.slideusers.data.remote.dto.userlist.UserList
 
 interface UserListRepository {
 
-    suspend fun getUserList(): List<Data>
+    suspend fun getUserList(queryMap:HashMap<String,Int>): List<Data>
 
     suspend fun addNewUser(inputBody:HashMap<String,String>): String
 

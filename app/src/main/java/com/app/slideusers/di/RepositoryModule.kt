@@ -3,7 +3,7 @@ package com.app.slideusers.di
 import com.app.slideusers.data.remote.network.ApiService
 import com.app.slideusers.data.repository.UserRepositoryImp
 import com.app.slideusers.domain.repository.UserListRepository
-import com.app.slideusers.domain.use_cases.GetUserList
+import com.app.slideusers.domain.use_cases.UserUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,8 +23,8 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun  providesGetUserListUSeCase(userListRepository: UserListRepository):GetUserList{
-        return GetUserList(userListRepository)
+    fun  providesGetUserListUSeCase(userListRepository: UserListRepository):UserUseCase{
+        return UserUseCase(userListRepository)
     }
 
 

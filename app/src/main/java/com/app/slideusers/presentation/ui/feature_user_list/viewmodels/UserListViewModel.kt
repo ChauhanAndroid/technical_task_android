@@ -6,7 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.slideusers.data.remote.network.NetworkResult
-import com.app.slideusers.domain.use_cases.GetUserList
+import com.app.slideusers.domain.use_cases.UserUseCase
+import com.app.slideusers.domain.utils.Constants.LAST_PAGE
+import com.app.slideusers.domain.utils.Constants.LIMIT
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -14,13 +16,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UserListViewModel @Inject constructor(
-    private val getUserList: GetUserList) : ViewModel() {
+    private val userUseCase: UserUseCase) : ViewModel() {
 
    private val _responseUserList: MutableLiveData<UserListState> = MutableLiveData()
      val responseUserList: LiveData<UserListState> = _responseUserList
 
      fun getUserList() {
-        getUserList.invoke().onEach { result->
+        userUseCase.invoke(constructQuery()).onEach { result->
             when(result){
                 is NetworkResult.Loading->{
                 Log.e("loading","true")
@@ -40,7 +42,7 @@ class UserListViewModel @Inject constructor(
     }
 
     fun addNewUser(name:String,email:String) {
-        getUserList.invoke(constructUser(name=name,email=email)).onEach { result->
+        userUseCase.invoke("add",constructUser(name=name,email=email)).onEach { result->
             when(result){
                 is NetworkResult.Loading->{
                     Log.e("loading","true")
@@ -63,8 +65,15 @@ class UserListViewModel @Inject constructor(
         return user
     }
 
+    private fun constructQuery():HashMap<String,Int>{
+        val query = HashMap<String,Int>()
+        query["page"]= LAST_PAGE
+        query["limit"]= LIMIT
+        return query
+    }
+
     fun deleteUser(userId:String) {
-        getUserList.invoke(userId).onEach { result->
+        userUseCase.invoke(userId).onEach { result->
             when(result){
                 is NetworkResult.Loading->{
                     Log.e("loading","true")

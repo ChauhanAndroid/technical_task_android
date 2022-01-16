@@ -7,8 +7,8 @@ import com.app.slideusers.domain.repository.UserListRepository
 import javax.inject.Inject
 
 class UserRepositoryImp @Inject constructor(private val apiService: ApiService) : UserListRepository {
-    override suspend fun getUserList(): List<Data> {
-        return apiService.getUserList().data
+    override suspend fun getUserList(query:HashMap<String,Int>): List<Data> {
+        return apiService.getUserList(query=query).data
     }
 
     override suspend fun addNewUser(inputBody: HashMap<String, String>): String {

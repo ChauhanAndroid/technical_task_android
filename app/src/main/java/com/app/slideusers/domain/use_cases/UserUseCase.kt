@@ -12,12 +12,12 @@ import java.io.IOException
 import java.util.concurrent.Flow
 import javax.inject.Inject
 
-class GetUserList @Inject constructor(private val userListRepository: UserListRepository) {
+class UserUseCase @Inject constructor(private val userListRepository: UserListRepository) {
 
-    operator fun invoke() = flow {
+    operator fun invoke(queryMap:HashMap<String,Int>) = flow {
         try {
             emit(NetworkResult.Loading())
-            val result = userListRepository.getUserList().map { it.toUserModel() }
+            val result = userListRepository.getUserList(queryMap).map { it.toUserModel() }
             emit(NetworkResult.Success(result))
         } catch (e: HttpException) {
             Log.e("HttpException", e.localizedMessage)
@@ -27,7 +27,7 @@ class GetUserList @Inject constructor(private val userListRepository: UserListRe
         }
     }
 
-    operator fun invoke(inputBody:HashMap<String,String>) = flow {
+    operator fun invoke(tag:String,inputBody:HashMap<String,String>) = flow {
         try {
             emit(NetworkResult.Loading())
             val result = userListRepository.addNewUser(inputBody)
